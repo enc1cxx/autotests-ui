@@ -5,11 +5,12 @@
 from playwright.sync_api import sync_playwright, expect  # Импорт Playwright для синхронного режима и проверки
 
 # Запуск Playwright в синхронном режиме
+# Открываем браузер с использованием Playwright
 with sync_playwright() as playwright:
-    # Открываем браузер Chromium (не в headless режиме, чтобы видеть действия)
+    # Запускаем Chromium браузер в обычном режиме (не headless)
     browser = playwright.chromium.launch(headless=False)
-    page = browser.new_page()  # Создаем новую страницу
-
-    # Переходим на страницу авторизации
-    page.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/login")
+    # Создаем новый контекст браузера (новая сессия, которая изолирована от других)
+    context = browser.new_context()
+    # Открываем новую страницу в рамках контекста
+    page = context.new_page()
 ```
