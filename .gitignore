@@ -22,3 +22,11 @@ dist/
 .ipynb_checkpoints
 
 .vscode
+.idea
+
+allure-results/
+tracing/
+.pytest_cache/
+videos/
+
+browser-state.json
