@@ -2,16 +2,19 @@ import pytest
 from _pytest.fixtures import SubRequest
 from playwright.sync_api import Playwright, Page
 
+from config import settings
 from pages.authentication.registration_page import RegistrationPage
 from tools.playwright.pages import initialize_playwright_page
-
-from config import settings
 from tools.routes import AppRoute
 
 
 @pytest.fixture(params=settings.browsers)
 def chromium_page(request: SubRequest, playwright: Playwright) -> Page:
-    yield from initialize_playwright_page(playwright, test_name=request.node.name, browser_type=request.param)
+    yield from initialize_playwright_page(
+        playwright,
+        test_name=request.node.name,
+        browser_type=request.param  # Передаем браузер как параметр
+    )
 
 
 @pytest.fixture(scope="session")
@@ -25,7 +28,7 @@ def initialize_browser_state(playwright: Playwright):
     registration_page.registration_form.fill(
         email=settings.test_user.email,
         username=settings.test_user.username,
-        password=settings.test_user.password,
+        password=settings.test_user.password
     )
     registration_page.click_registration_button()
 
@@ -34,12 +37,10 @@ def initialize_browser_state(playwright: Playwright):
 
 
 @pytest.fixture(params=settings.browsers)
-def chromium_page_with_state(
-    initialize_browser_state, request: SubRequest, playwright: Playwright
-) -> Page:
+def chromium_page_with_state(initialize_browser_state, request: SubRequest, playwright: Playwright) -> Page:
     yield from initialize_playwright_page(
         playwright,
         test_name=request.node.name,
-        browser_type=request.param,
-        storage_state=settings.browser_state_file
+        browser_type=request.param,  # Передаем браузер как параметр
+        storage_state=settings.browser_state_file,
     )
